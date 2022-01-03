@@ -35,6 +35,7 @@ const useMockData = () => {
     useEffect(() => {
         updateProgress();
     }, [count]);
+
     async function initialize() {
         try {
             for (const prof of professions) {

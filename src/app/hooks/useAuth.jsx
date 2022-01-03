@@ -19,7 +19,11 @@ const AuthProvider = ({ children }) => {
     async function signUp({ email, password, ...rest }) {
         const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.REACT_APP_FIREBASE_KEY}`;
         try {
-            const { data } = await httpAuth.post(url, { email, password, returnSecureToken: true });
+            const { data } = await httpAuth.post(url, {
+                email,
+                password,
+                returnSecureToken: true
+            });
             setTokens(data);
             await createUser({ _id: data.localId, email, ...rest });
         } catch (error) {
@@ -27,17 +31,23 @@ const AuthProvider = ({ children }) => {
             const { code, message } = error.response.data.error;
             if (code === 400) {
                 if (message === "EMAIL_EXISTS") {
-                    const errorObject = { email: "Пользовательно с таким email существует" };
+                    const errorObject = {
+                        email: "Пользовательно с таким email существует"
+                    };
                     throw errorObject;
                 }
             }
         }
-    };
+    }
 
     async function signIn({ email, password }) {
         const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.REACT_APP_FIREBASE_KEY}`;
         try {
-            const { data } = await httpAuth.post(url, { email, password, returnSecureToken: true });
+            const { data } = await httpAuth.post(url, {
+                email,
+                password,
+                returnSecureToken: true
+            });
             setTokens(data);
         } catch (error) {
             const { code, message } = error.response.data.error;
@@ -46,7 +56,9 @@ const AuthProvider = ({ children }) => {
                     const errorObject = { password: "Пароль указан неверно" };
                     throw errorObject;
                 } else if (message === "EMAIL_NOT_FOUND") {
-                    const errorObject = { email: "Данный email не зарегистрирован" };
+                    const errorObject = {
+                        email: "Данный email не зарегистрирован"
+                    };
                     throw errorObject;
                 }
             }
@@ -73,7 +85,7 @@ const AuthProvider = ({ children }) => {
         }
     }, [error]);
     return (
-        <AuthContext.Provider value={{ signUp, signIn, currentUser }} >
+        <AuthContext.Provider value={{ signUp, signIn, currentUser }}>
             {children}
         </AuthContext.Provider>
     );

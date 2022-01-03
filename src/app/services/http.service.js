@@ -26,6 +26,7 @@ function transormData(data) {
           }))
         : [];
 }
+
 http.interceptors.response.use(
     (res) => {
         if (configFile.isFireBase) {
