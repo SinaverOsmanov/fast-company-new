@@ -6,16 +6,28 @@ import SelectField from "../../common/form/selectField";
 import RadioField from "../../common/form/radioField";
 import MultiSelectField from "../../common/form/multiSelectField";
 import BackHistoryButton from "../../common/backButton";
-import { useProfessions } from "./../../../hooks/useProfession";
-import { useQualities } from "./../../../hooks/useQualities";
 import { useAuth } from "../../../hooks/useAuth";
+import {
+    // getQualiltiesLoadingStatus,
+    getQualities
+} from "./../../../store/qualities";
+import { useSelector } from "react-redux";
+import {
+    getProfessions
+    // getProfessionsLoading
+} from "../../../store/profession";
 
 const EditUserPage = () => {
     const { userId } = useParams();
     const history = useHistory();
     const { currentUser, updateUser } = useAuth();
-    const { professions } = useProfessions();
-    const { qualities } = useQualities();
+
+    const professions = useSelector(getProfessions());
+    // const professionsLoading = useSelector(getProfessionsLoading());
+
+    const qualities = useSelector(getQualities());
+    // const qualitiesLoading = useSelector(getQualiltiesLoadingStatus());
+
     const [isLoading, setIsLoading] = useState(false);
     const [data, setData] = useState({
         _id: "",
@@ -29,7 +41,7 @@ const EditUserPage = () => {
 
     const [errors, setErrors] = useState({});
 
-    const getQualities = (elements) => {
+    const qualitiesDta = (elements) => {
         const qualitiesQrray = [];
         for (const elem of elements) {
             for (const qualy of qualities) {
@@ -40,6 +52,7 @@ const EditUserPage = () => {
         }
         return qualitiesQrray;
     };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const isValid = validate();
@@ -60,7 +73,7 @@ const EditUserPage = () => {
         setIsLoading(true);
         setData({
             ...currentUser,
-            qualities: transformData(getQualities(currentUser.qualities))
+            qualities: transformData(qualitiesDta(currentUser.qualities))
         });
         setIsLoading(false);
     }, []);
