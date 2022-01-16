@@ -6,16 +6,16 @@ import GroupList from "../../common/groupList";
 import SearchStatus from "../../ui/searchStatus";
 import UserTable from "../../ui/usersTable";
 import _ from "lodash";
-import { useUser } from "../../../hooks/useUsers";
-import { useAuth } from "../../../hooks/useAuth";
 import {
     getProfessionsLoading,
     getProfessions
 } from "./../../../store/profession";
 import { useSelector } from "react-redux";
+import { getUsers, getCurrentUserId } from "../../../store/users";
+
 const UsersListPage = () => {
-    const { users } = useUser();
-    const { currentUser } = useAuth();
+    const currentUser = useSelector(getCurrentUserId());
+    const users = useSelector(getUsers());
 
     const professionsLoading = useSelector(getProfessionsLoading());
     const professions = useSelector(getProfessions());
@@ -76,8 +76,9 @@ const UsersListPage = () => {
                       JSON.stringify(selectedProf)
               )
             : data;
-        return filteredUsers.filter((u) => u._id !== currentUser._id);
+        return filteredUsers.filter((u) => u._id !== currentUser);
     }
+
     const filteredUsers = filterUsers(users);
     const count = filteredUsers.length;
     const sortedUsers = _.orderBy(filteredUsers, [sortBy.path], [sortBy.order]);
@@ -133,6 +134,7 @@ const UsersListPage = () => {
         </div>
     );
 };
+
 UsersListPage.propTypes = {
     users: PropTypes.array
 };

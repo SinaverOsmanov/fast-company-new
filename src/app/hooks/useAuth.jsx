@@ -7,6 +7,7 @@ import localStorageService, {
     setTokens
 } from "../services/localStorage.service";
 import { useHistory } from "react-router-dom";
+import { randomInt } from "../utils/randomInteger";
 
 export const httpAuth = axios.create({
     // baseUrl: 'https://identitytoolkit.googleapis.com/v1/',
@@ -25,10 +26,6 @@ const AuthProvider = ({ children }) => {
     const [error, setError] = useState(null);
     const [isLoading, setLoading] = useState(true);
     const history = useHistory();
-
-    function randomInt(min, max) {
-        return Math.floor(Math.random() * (max - min + 1) + min);
-    }
 
     async function signUp({ email, password, ...rest }) {
         const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.REACT_APP_FIREBASE_KEY}`;
