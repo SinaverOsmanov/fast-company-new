@@ -9,19 +9,31 @@ import {
     removeComment,
     createComment
 } from "./../../store/comments";
+import { getCurrentUserId } from "../../store/users";
+import { nanoid } from "nanoid";
+import { useParams } from "react-router-dom";
 
 const Comments = () => {
+    const { userId } = useParams();
     const dispatch = useDispatch();
-
+    const currentUserId = useSelector(getCurrentUserId());
     useEffect(() => {
-        dispatch(loadComments);
+        dispatch(loadComments(userId));
     }, []);
 
     const isLoading = useSelector(getCommentsLoading());
     const comments = useSelector(getComments());
 
     const handleSubmit = (data) => {
-        dispatch(createComment(data));
+        const comment = {
+            ...data,
+            pageId: userId,
+            created_at: Date.now(),
+            userId: currentUserId,
+            _id: nanoid()
+        };
+
+        dispatch(createComment(comment));
     };
     const handleRemoveComment = (id) => {
         dispatch(removeComment(id));

@@ -27,6 +27,7 @@ const commentsSlice = createSlice({
             state.isLoading = false;
         },
         commentRemoved: (state, action) => {
+            console.log(state);
             state.entities = state.entities.filter(
                 (c) => c._id !== action.payload
             );
@@ -70,14 +71,16 @@ export const removeComment = (userId) => async (dispatch) => {
     dispatch(commentsRequested());
     try {
         const { content } = await commentService.removeComment(userId);
-
-        dispatch(commentRemoved(content));
+        if (content === null) dispatch(commentRemoved(userId));
     } catch (error) {
         dispatch(commentsRequestFailed(error.message));
     }
 };
 
-export const getComments = () => (state) => state.comments.entities;
+export const getComments = () => (state) => {
+    console.log(state.comments.entities);
+    return state.comments.entities;
+};
 export const getCommentsLoading = () => (state) => state.comments.isLoading;
 
 export const getProfessionById = (id) => (state) => {
